@@ -10,7 +10,7 @@ func main() {
 
 		Print(game.board)
 
-		moves := PossibleMoves(game)
+		moves := Moves(game)
 
 		fmt.Print(moves)
 
@@ -84,7 +84,31 @@ func FromFemstring(fenstring string) Board {
 	return Board { { } }
 }
 
-func PossibleMoves(game Game) []Move {
+func Moves(game Game) []Move {
+	var possible_moves []Move
+
+	for y, row := range game.board {
+		for x, piece := range row {
+			from := Position{ x, y } 
+			possible_moves = PossibleMoves(piece, from, game)
+		}
+	}
+
+	return possible_moves
+}
+
+func PossibleMoves(piece Piece, from Position, game Game) []Move {
+	var possible_moves []Move
+
+	if MovesVertically(piece) {
+		deltas := []Position { { 0, 1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } }
+		return Foo(from, 8, deltas, possible_moves, game)
+	}
+
+	return possible_moves
+}
+
+func PossibleMoves2(game Game) []Move {
 	possible_moves := make([]Move, 256)
 
 	for y, row := range game.board {
